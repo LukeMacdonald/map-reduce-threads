@@ -26,6 +26,7 @@ void map2(const std::string& filename){
         }
     }
     wait(nullptr);
+    //reduce2();
 }
 void reduce2(){
     std::ifstream files[13];

@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
     else if (task == "task2"){
         task1filter(input_file,output_file);
         map2(output_file);
-        reduce2();
     }
   
   
