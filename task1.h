@@ -1,6 +1,4 @@
-
 #ifndef OSPA1_TASK1_H
-
 #define OSPA1_TASK1_H
 
 #include <iostream>

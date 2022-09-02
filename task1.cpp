@@ -1,6 +1,3 @@
-//
-// Created by Luke on 29/8/2022.
-//
 #include "task1.h"
 void task1filter(const std::string &read_file, const std::string &write_file){
     std::ifstream in_file;

@@ -1,5 +1,4 @@
 #include "task2.h"
-
 void map2(const std::string& filename){
     
     std::string input;
@@ -31,45 +30,61 @@ void map2(const std::string& filename){
 void reduce2(){
     std::ifstream files[13];
     std::string words[13];
-    std::string final_file = "task2files/merge.txt";
-    std::ofstream output;
-    std::vector<std::string> lists;
+    std::vector<std::string> lists[PROCESS_NUM];
 
     for (int i = 0; i < 13; i++){
         files[i].open("task2files/File" + std::to_string(i + 3) + ".txt");
         words[i] = "";
     }
-    output.open(final_file);
     do
     {
         for (int i = 0; i < 13; i++ ){
             if (std::getline(files[i], words[i])){
-                lists.push_back(words[i]);
+                lists[i].push_back(words[i]);
             }
             else{
                 words[i] = "";
             }
         }
-        sort(lists.begin(), lists.end(), sort_cmd2);
-        for(std::string & line : lists){
-            output << line << std::endl;
-        }
-        lists.clear();
     }while (!words[0].empty() || !words[1].empty() || !words[2].empty() || !words[3].empty() ||
             !words[4].empty() || !words[5].empty() || !words[6].empty() || !words[7].empty() ||
             !words[8].empty() || !words[9].empty() || !words[10].empty() || !words[11].empty() ||
             !words[12].empty());
-    output.close();
+    
+    std::vector<std::string> lists_words;
+    std::ofstream output;
+    printf("Now Sorting and Merging List to File...\n");
+    output.open("task2files/merge.txt");
     for (int i = 0; i < 13; i++){
         files[i].close();
     }
-}
-bool sort_cmd2(std::string s1, std::string s2) {
-    return s1.substr(2,-1) < s2.substr(2,-1);
+    int total = 0;
+    for(int j = 0; j < PROCESS_NUM;j++){
+        lists_words.push_back(lists[j][0]);
+        total += lists[j].size();
+        lists[j].erase(lists[j].begin());
+        
+    }
+    int size = lists_words.size() - 1;
+
+    lists_words = mergeSort(lists_words,0,size);
+
+    for (int i = 0; i < total;i++){
+        output << lists_words[0] << std::endl;
+        int next = lists_words[0].size() - 3;
+        lists_words.erase(lists_words.begin());
+        if(!lists[next].empty()){
+            lists_words.push_back(lists[next][0]);
+            lists[next].erase(lists[next].begin());
+            size = lists_words.size() - 1;
+            lists_words = mergeSort(lists_words,0,size);
+        }
+    }
+    output.close();
 }
 void child_function(int index,std::vector<std::string> list){
     std::ofstream file;
-    sort(list.begin(),list.end(), sort_cmd2);
+    sort(list.begin(),list.end(), sort_string);
     file.open("task2files/File" + std::to_string(index) + ".txt");
     for (std::string &line: list) {
         file << line << std::endl;

@@ -1,6 +1,7 @@
 
 #include "task1.h"
 #include "task2.h"
+#include "task3.h"
 
 int main(int argc, char *argv[]) {
     std::string task = argv[1];
@@ -12,6 +13,9 @@ int main(int argc, char *argv[]) {
     else if (task == "task2"){
         task1filter(input_file,output_file);
         map2(output_file);
+    }
+    else if(task == "task3"){
+        main_task3(input_file,output_file);
     }
   
   

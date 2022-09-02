@@ -6,15 +6,14 @@
 #include <vector>
 #include <unistd.h>
 #include <sys/types.h>
-#include <fcntl.h>
 #include <algorithm>
 #include <sys/wait.h>
+#include "sorts.h"
 
 #define PROCESS_NUM 13
 
 void map2(const std::string& filename);
 void reduce2();
-bool sort_cmd2(std::string s1, std::string s2);
 void child_function(int index,std::vector<std::string> list);
 
 #endif //OSPA1_TASK2_H

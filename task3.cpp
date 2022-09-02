@@ -1,18 +1,23 @@
 #include "task3.h"
-
 std::vector<std::string> Global;
-bool map3_done;
-
+int map3Counter;
+pthread_cond_t cond3;
+pthread_mutex_t mutex3;
 void main_task3(const std::string& dirty_file,const std::string& clean_file){
+
+    pthread_cond_init(&cond3,NULL);
+    pthread_mutex_init(&mutex3,NULL);
+
 
     // FILTERS INPUT FILE
     task1filter(dirty_file,clean_file);
-    map3_done = false;
+    map3Counter = 0;
   
     // READS WORD INTO GLOBAL ARRAY
     std::ifstream file;
     file.open(clean_file);
     std::string input;
+    
     while(getline(file,input)){
         Global.push_back(input);
     }
@@ -37,14 +42,21 @@ void main_task3(const std::string& dirty_file,const std::string& clean_file){
         printf("Map3 Thread has finished Execution!\n");
     }
 
-    while(!map3_done){}
+    pthread_mutex_lock(&mutex3);
+    while(map3Counter < 13){
+        pthread_cond_wait(&cond3,&mutex3);
+    }
+    pthread_mutex_unlock(&mutex3);
+
     if(pthread_join(reduce, nullptr)!=0){}
     else{
         printf("Reduce3 Thread has finished Execution!\n");
     }
+
+
+
 }
 void *map3(void* args){
-  
 
     pthread_t th[THREAD_NUM];
     std::vector<int> index[THREAD_NUM];
@@ -71,7 +83,7 @@ void *map3(void* args){
         if (pthread_join(th[i], nullptr) != 0) {}
         printf("Thread %d has finished execution\n", curr_index);
     }
-    map3_done = true;
+
     return nullptr;
 }
 void *reduce3(void* args){
@@ -82,6 +94,20 @@ void *reduce3(void* args){
         
         char file_name[file.length() + 1]; 
         strcpy(file_name,file.c_str());
+        // FILE * fp;
+        // fp = fopen (file_name , "r");
+        // int c;
+        // std::string current;
+        // while(!feof(fp)){
+        //      c = fgetc(fp);
+        //     if(c == ' '){
+        //         lists[i].push_back(current);
+        //         current = "";
+        //     }
+        //     else{
+        //         current+=c;
+        //     }
+        // }
         int fd = open(file_name, O_RDONLY);
         char c;
         std::string current;
@@ -91,7 +117,6 @@ void *reduce3(void* args){
                 current = "";
             } else {
                 current += c;
-        
             }
         }
         close(fd);
@@ -99,36 +124,34 @@ void *reduce3(void* args){
         printf("Message Has Been Read From Pipe For Index %d\n",index);
     }
     printf("All Pipes Have Been Read!\n");
-    int max = 0;
-    for (int i = 0 ; i < THREAD_NUM;i++) {
-        if ((int)lists[i].size() > max){
-            max = (int)lists[i].size();
-        }
-    }
     
     std::vector<std::string> lists_words;
     std::ofstream output;
     printf("Now Sorting and Merging List to File...\n");
     output.open("task3files/merge.txt");
-     for(int j = 0; j < THREAD_NUM;j++){
+    
+    for(int j = 0; j < THREAD_NUM;j++){
         lists_words.push_back(lists[j][0]);
         lists[j].erase(lists[j].begin());
     }
+    int size = lists_words.size() - 1;
+
+    lists_words = mergeSort(lists_words,0,size);
+
     for (int i = 0; i < Global.size();i++){
-        sort(lists_words.begin(), lists_words.end(), sort_cmd3);
         output << lists_words[0] << std::endl;
         int next = lists_words[0].size() - 3;
         lists_words.erase(lists_words.begin());
         if(!lists[next].empty()){
             lists_words.push_back(lists[next][0]);
             lists[next].erase(lists[next].begin());
+            size = lists_words.size() - 1;
+            lists_words = mergeSort(lists_words,0,size);
         }
     }
     printf("Completed!!!\n");
-
     output.close();
     return nullptr;
-
 }
 void *pthread_function(void *a)
 {
@@ -142,37 +165,34 @@ void *pthread_function(void *a)
     
     if(mkfifo(file_name, 0755) == -1){
         if(errno != EEXIST){
-            perror("Could Not Create Fifo File\n");
+            perror("Could Not Create Fifo File");
         }
     }
     sort(list.begin(),list.end(),sort_cmdGlobal);
     std::string total;
     for (int i : list){
         total += Global[i] + " ";
-        
     }
+    //  FILE * fp;
+    //  fp = fopen (file_name , "w");
+    //  int val = fwrite(total.c_str(),total.length()+1,1,fp);
+    //  std::cout << val;
     
     int fd = open(file_name, O_WRONLY);
     if(write(fd,total.c_str(),total.length()) < 0 ){
-        perror("Error Writing to FIFO Files\n");
-
+        perror("Error Writing to FIFO Files");
     }
     else{
         printf("Message Has Been Written to Pipe For Thread %d\n",index_size);
     }
     close(fd);
+    map3Counter++;
+    pthread_cond_signal(&cond3);
+
     return nullptr;
 
 }
-bool sort_cmdGlobal(int s1, int s2)
+bool sort_cmdGlobal(int index1, int index2)
 {
-    std::string i1=  Global[s1].substr(2,-1);
-    std::string i2=  Global[s2].substr(2,-1);
-    return i1 < i2;
+    return Global[index1].substr(2,-1)< Global[index2].substr(2,-1);
 }
-bool sort_cmd3(std::string s1, std::string s2) {
-    std::string i1=  s1.substr(2,-1);
-    std::string i2=  s2.substr(2,-1);
-    return i1 < i2;
-}
-  
