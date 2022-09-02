@@ -1,6 +1,7 @@
 #include "task2.h"
 
 void map2(const std::string& filename){
+    
     std::string input;
     std::ifstream input_file;
     input_file.open(filename);
@@ -12,26 +13,25 @@ void map2(const std::string& filename){
     }
     input_file.close();
 
-    for (int i = 3; i <= 15; i++) {
-        int pid = fork();
-        if (pid == 0) {
-            std::ofstream f1;
-            sort(index[i - 3].begin(),index[i - 3].end(), sort_cmd2);
-            f1.open("task2files/File" + std::to_string(i) + ".txt");
-            for (std::string &line: index[i - 3]) {
-                f1 << line << std::endl;
-            }
-            f1.close();
-
+    int index_size;
+    
+    for (int i = 0; i < PROCESS_NUM; i++) {
+        if (fork()== 0) {
+            index_size = i + 3;
+            child_function(index_size,index[i]);
+            exit(0);
         }
     }
-    wait(nullptr);
-    //reduce2();
+    for (int i = 0; i <= PROCESS_NUM; i++) {
+        wait(nullptr);
+    }
+    reduce2();
+    
 }
 void reduce2(){
     std::ifstream files[13];
     std::string words[13];
-    std::string final_file = "merge.txt";
+    std::string final_file = "task2files/merge.txt";
     std::ofstream output;
     std::vector<std::string> lists;
 
@@ -65,5 +65,14 @@ void reduce2(){
     }
 }
 bool sort_cmd2(std::string s1, std::string s2) {
-    return s1[2] < s2[2];
+    return s1.substr(2,-1) < s2.substr(2,-1);
+}
+void child_function(int index,std::vector<std::string> list){
+    std::ofstream file;
+    sort(list.begin(),list.end(), sort_cmd2);
+    file.open("task2files/File" + std::to_string(index) + ".txt");
+    for (std::string &line: list) {
+        file << line << std::endl;
+    }
+    file.close();
 }
