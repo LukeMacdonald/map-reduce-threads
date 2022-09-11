@@ -86,7 +86,7 @@ int main(int argc, char * argv[]) {
     r.print_exec_time("Total",time_taken);
 
     //Task3 Complete
-    std::cout << "Task 4 Finish Completed!\nOutput File is located in in 'Task4Files/output' directory as '" 
+    std::cout << "Task 3 Finish Completed!\nFind ouput file in 'Task3Files/output' directory as '" 
     << output_file <<  "'\n";
     r.close_files();
     return EXIT_SUCCESS;

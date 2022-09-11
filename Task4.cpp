@@ -86,7 +86,7 @@ int main(int argc, char * argv[]) {
 
     //Task3 Complete
     output_hander.print_log("# Task 4 Finish, Outputs in 'Task4Files/output/' directory"); 
-    std::cout << "Task 4 Finish Completed!\nOutput File is located in in 'Task4Files/output' directory as '" 
+    std::cout << "Task 4 Finish Completed!\nFind ouput file in 'Task4Files/output' directory as '" 
     << output_file <<  "'\n";
     // stops and recoords execution time for entire program
     end = clock();
