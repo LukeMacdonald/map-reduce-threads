@@ -72,7 +72,7 @@ void* map5(void* args){
     while(read(fd,&line,BUFFER)>0){
         c = line;
         int index = c.length() - 3;
-        write(cd[index],c.c_str(),c.length() + 1);
+        if(write(cd[index],c.c_str(),c.length() + 1)>0){};
     }
     close(fd);
     for (int i = 0; i < THREAD_NUM; i++) {

@@ -1,5 +1,5 @@
 #include <random>
-#include "stream.h"
+#include "Stream.h"
 Stream::Stream(const std::string& filename){
     std::ifstream file (filename);
     std::string word;
