@@ -1,5 +1,5 @@
-#ifndef TASK5_H
-#define TASK5_H
+#ifndef OSPA1_TASK5_H
+#define OSPA1_TASK5_H
 
 #include <iostream>
 #include <fstream>
@@ -20,4 +20,4 @@ void* map5(void* args);
 void* reduce5(void* args);
 void *pthread_function(void *a);
 
-#endif //TASK5_H
+#endif //OSPA1_TASK5_H

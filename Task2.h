@@ -1,5 +1,5 @@
-#ifndef TASK2_H
-#define TASK2_H
+#ifndef OSPA1_TASK2_H
+#define OSPA1_TASK2_H
 
 #include <iostream>
 #include <fstream>
@@ -14,9 +14,12 @@
 
 #define PROCESS_NUM 13
 
-int main(int argc, char *argv[]);
+// Mapping method for task2
 void map2(std::string filename);
+// Reduce method for task2
 void reduce2(std::string filename);
+// Function that does the mapping of the 13 different lengths
+// and is called by the child process
 void child_function(int index,std::vector<std::string> list);
 
-#endif //TASK2_H
+#endif //OSPA1_TASK2_H

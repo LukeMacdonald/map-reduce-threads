@@ -1,9 +1,10 @@
 #include "Task2.h"
-OutputHandler r;
+
+OutputHandler output_handler;
 int main(int argc, char *argv[]){
     clock_t start,end;
     start = clock();
-    r.open_files("Task2Files");
+    output_handler.open_files("Task2Files");
      // First command line argument is the name of dirty file
     std::string input_file = argv[1];
     // Second command line argument is the name of the clean file
@@ -16,8 +17,8 @@ int main(int argc, char *argv[]){
     << output_file <<  "'\n";
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-    r.print_exec_time("Total",time_taken);
-    r.close_files();
+    output_handler.print_exec_time("Total",time_taken);
+    output_handler.close_files();
     return EXIT_SUCCESS;
 }
 void map2(std::string filename){
@@ -32,17 +33,17 @@ void map2(std::string filename){
     // Declares string to store current line of file
     // input
     std::string line;
-    r.print_log("Reading Words in Vectors From File:" + filename);
+    output_handler.print_log("Reading Words in Vectors From File:" + filename);
     // While loop to read through entire file
     while (std::getline(input_file, line)) {
         // gets the length of the current word being read
         auto size = int(line.size());
         // stores that word into the vector that correlates to
         // the size of the string. E.g. of length 3 will be stored
-        // in index[0] vector.
+        // in index[0] vectooutput_handler.
         index[size - 3].push_back(line);
     }
-    r.print_log("Reading Words From File:" + filename + " And Sorting Those Words into" 
+    output_handler.print_log("Reading Words From File:" + filename + " And Sorting Those Words into" 
                 + " Length Vectors Now Completed");
     // Closes cleaned input file
     input_file.close();
@@ -56,14 +57,14 @@ void map2(std::string filename){
             start_process = clock();
             
             index_size = i + 3;
-            r.print_log("Map2 child process: For Length Vector " + std::to_string(index_size) + " Now Starting!");
+            output_handler.print_log("Map2 child process: For Length Vector " + std::to_string(index_size) + " Now Starting!");
             // Calls function to map vector to correlating index file
             child_function(index_size,index[i]);
-            r.print_log("Map2 child process: For Length Vector " + std::to_string(index_size) + " Has Completed!");
+            output_handler.print_log("Map2 child process: For Length Vector " + std::to_string(index_size) + " Has Completed!");
             // Call to exit the child process
              end_process = clock();
              double time_taken_process = double(end_process - start_process) / double(CLOCKS_PER_SEC);
-             r.print_exec_time("Map2 Process"+ std::to_string(index_size),time_taken_process);
+             output_handler.print_exec_time("Map2 Process"+ std::to_string(index_size),time_taken_process);
             exit(EXIT_SUCCESS);
         }
     }
@@ -73,10 +74,10 @@ void map2(std::string filename){
     }
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-    r.print_exec_time("Map2",time_taken);
-    r.print_log("Map2 has completed!");
+    output_handler.print_exec_time("Map2",time_taken);
+    output_handler.print_log("Map2 has completed!");
     // Function call to reduce 
-    r.print_log("Parent process: Reduce Method Now Starting!");
+    output_handler.print_log("Parent process: Reduce Method Now Starting!");
     reduce2(filename);
     
 }
@@ -93,13 +94,13 @@ void reduce2(std::string filename){
     for (int i = 0; i < PROCESS_NUM; i++){
         length_file = "Task2Files/MapFolder/File" + std::to_string(i + 3) + ".txt";
         files[i].open(length_file);
-        r.print_log("OPENING FILE: " + length_file);
+        output_handler.print_log("Opening: " + length_file);
         if (std::getline(files[i], smallest)){
             all_words.push_back(smallest);
         }
     }
     
-    r.print_log("Now Sorting And Merging List To File: " + filename);;
+    output_handler.print_log("Now Sorting And Merging List To File: " + filename);;
     std::string file = "Task2Files/output/" + filename;
     std::ofstream output(file);
    
@@ -120,16 +121,16 @@ void reduce2(std::string filename){
     }
     // Closes file that reduce is writing to.
     output.close();
-    r.print_log("Merge And Sort Now Completed!");
+    output_handler.print_log("Merge And Sort Now Completed!");
     // Closes all the different word length files
     for (int i = 0; i < 13; i++){
-        r.print_log("CLOSING FILE: Task2Files/MapFolder/File" + std::to_string(i + 3) + ".txt");
+        output_handler.print_log("Closing Task2Files/MapFolder/File" + std::to_string(i + 3) + ".txt");
         files[i].close();
     }
-    r.print_log("REDUCE2 HAS COMPLETED!!!");
+    output_handler.print_log("Reduce2 has completed!");
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-    r.print_exec_time("Reduce2",time_taken);
+    output_handler.print_exec_time("Reduce2",time_taken);
 }
 void child_function(int index,std::vector<std::string> list){
     std::ofstream file;

@@ -1,10 +1,10 @@
-#ifndef TASK5Server_H
-#define TASK5Server_H
+#ifndef OSPA1_TASK5SERVER_H
+#define OSPA1_TASK5SERVER_H
 
 #include <iostream>
 #include <fstream>
 #include "Stream.h"
 
-int mainS(int argc, char *argv[]);
+int main(int argc, char *argv[]);
 
-#endif //TASK5Server_H
+#endif //OSPA1_TASK5SERVER_H

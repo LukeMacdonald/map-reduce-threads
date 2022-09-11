@@ -1,3 +1,5 @@
+#ifndef OSPA1_STREAM_H
+#define OSPA1_STREAM_H
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -13,8 +15,4 @@ private:
     std::vector<std::string> words;
     int length;
 };
-
-#ifndef OSPA1_STREAM_H
-#define OSPA1_STREAM_H
-
 #endif //OSPA1_STREAM_H
