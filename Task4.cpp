@@ -134,15 +134,15 @@ void *map4(void *args)
     int max = sched_get_priority_max(SCHED_RR);
     int min = sched_get_priority_min(SCHED_RR);
     int step = (max - min)/THREAD_NUM;
-    int priority = max;
+    int priority = min;
 
     for(int i = 0; i < THREAD_NUM;i++){
         pthread_attr_init (&tattr[i]);
         pthread_attr_setschedpolicy(&tattr[i], SCHED_RR);
         param.sched_priority =  priority;
         pthread_attr_setschedparam (&tattr[i], &param);
-        pthread_attr_setinheritsched (&tattr[i], PTHREAD_INHERIT_SCHED);
-        priority -= step;
+        pthread_attr_setinheritsched (&tattr[i], PTHREAD_EXPLICIT_SCHED);
+        priority += step;
     }
 
     //Step 3
