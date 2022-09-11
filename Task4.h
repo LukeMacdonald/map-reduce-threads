@@ -1,28 +1,25 @@
 #ifndef OSPA1_TASK3_H
 #define OSPA1_TASK3_H
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <unistd.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <sys/stat.h>
+#include <string>
 #include <pthread.h>
-#include <algorithm>
-#include <errno.h>
+#include <iostream>
+#include <sys/wait.h>
+#include <unistd.h>
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <fstream>
 #include "Task1Filter.h"
-#include "Sorts.h"
+#include "Structures.h"
+#include "Utils.h"
+#include "OutputHandler.h"
 
-
-#define THREAD_NUM 13
-
-int main(int argc, char *argv[]);
-void *map4(void *a);
-void *reduce4(void *a);
-void *pthread_function(void *a);
-bool sort_cmdGlobal(int s1, int s2);
+void* map4(void* args);
+void* reduce4(void* args); 
+void *pthread_write(void *args);
+void *pthread_read(void *args);
+bool sort_global(int index1, int index2);
+void graceful_exit_handler(int seconds);
 
 #endif //OSPA1_TASK3_H
