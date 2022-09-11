@@ -119,11 +119,11 @@ void *map3(void *args)
     // Create all the map threads and their parameters
     for (int i = 0; i < THREAD_NUM; i++)
     {
-        // stores index of store in map pthread parameter
+        // stores index of store in map thread parameter
         params[i].word_index = i; 
-        // stores the index array in map pthread parameter
+        // stores the index array in map thread parameter
         params[i].indexes = index_array[i];
-        // creates the 13 map pthread
+        // creates the 13 map thread
         int thread_return = pthread_create(&map_threads[i], NULL, pthread_write, &params[i]);
         if (thread_return) { return NULL; }
     }
@@ -240,7 +240,7 @@ void* reduce3(void* args) {
 }
 void *pthread_write(void *args) {
     // Starts the time for measuring execution time 
-    // of reduce3 program
+    // of mapping threads
     clock_t start, end;
     start = clock();
     struct MapParams *mapData = (struct MapParams *)args;
