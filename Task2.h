@@ -9,7 +9,8 @@
 #include <algorithm>
 #include <sys/wait.h>
 #include "Task1Filter.h"
-#include "Sorts.h"
+#include "Utils.h"
+#include "OutputHandler.h"
 
 #define PROCESS_NUM 13
 
