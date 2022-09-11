@@ -1,5 +1,4 @@
 #include "Task1Filter.h"
-#include <random>
 
 void task1Filter(std::string read_file, std::string write_file){
 
@@ -36,11 +35,6 @@ void task1Filter(std::string read_file, std::string write_file){
     // Function to remove duplicate within the specified range
     // The specified range here is the beginning and end of vector
     std::unique(wordset.begin(),wordset.end());
-
-    // algorithm that generates random numbers using computers internal clock 
-    std::random_device engine;
-    // function to shuffle the vector to get it in random order
-    std::shuffle(wordset.begin(), wordset.end(),engine);
 
     // Opens file to output filtered words
     std::ofstream out_file(write_file);
