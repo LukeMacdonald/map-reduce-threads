@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "stream.h"
+#include "Stream.h"
 
 int mainS(int argc, char *argv[]);
 

@@ -13,10 +13,9 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include "Utils.h"
+#include "Structures.h"
 
-
-
-int main(int argc, char *argv[]);
 void* map5(void* args);
 void* reduce5(void* args);
 void *pthread_function(void *a);

@@ -1,5 +1,4 @@
 #include "Task5.h"
-#include "Sorts.h"
 
 #define BUFFER 250
 #define THREAD_NUM 13
