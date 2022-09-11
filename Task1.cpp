@@ -1,6 +1,7 @@
 #include "Task1.h"
-#include <random>
+#include <chrono>
 
+using namespace std::chrono;
 
 int main(int argc, char *argv[]){
     // First command line argument is the name of dirty file
@@ -8,12 +9,12 @@ int main(int argc, char *argv[]){
     // Second command line argument is the name of the clean file
     std::string output_file= argv[2];
     // Function to filter to dirty file into the clean file.
-    task1Filter(input_file,output_file);
+    task1Filter(input_file,"Task1Files/"+output_file);
     return EXIT_SUCCESS;
 
 }
 void task1Filter(std::string read_file, std::string write_file){
-
+    
     // Declares and Opens Dirty File
     std::ifstream input_file(read_file);
     // Declares vector to add filtered words to\td
@@ -47,11 +48,6 @@ void task1Filter(std::string read_file, std::string write_file){
     // Function to remove duplicate within the specified range
     // The specified range here is the beginning and end of vector
     std::unique(wordset.begin(),wordset.end());
-
-    // algorithm that generates random numbers using computers internal clock 
-    std::random_device engine;
-    // function to shuffle the vector to get it in random order
-    std::shuffle(wordset.begin(), wordset.end(),engine);
 
     // Opens file to output filtered words
     std::ofstream out_file(write_file);
