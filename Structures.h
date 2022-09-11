@@ -1,10 +1,10 @@
 #include <iostream>
 #include <queue>
-struct FIFOThreadParams {
+struct ReduceParams {
     int index;
     std::queue<std::string>* stored_strings; 
 };
 struct MapParams {
-    int word_length;
+    int word_index;
     std::vector<int> indexes;
 };
