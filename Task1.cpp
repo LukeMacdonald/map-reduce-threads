@@ -11,7 +11,7 @@ int main(int argc, char *argv[]){
     // Second command line argument is the name of the clean file
     std::string output_file= argv[2];
     // Function to filter to dirty file into the clean file.
-    task1Filter(input_file,"Task1Files/"+output_file);
+    task1Filter(input_file,"Task1Files/output/"+output_file);
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
     output_handler.print_exec_time("Task1",time_taken);
@@ -60,6 +60,7 @@ void task1Filter(std::string read_file, std::string write_file){
     // The specified range here is the beginning and end of vector
     output_handler.print_log("Checking for uniqueness of strings");
     std::unique(wordset.begin(),wordset.end());
+
 
     // Opens file to output filtered words
     std::ofstream out_file(write_file);
