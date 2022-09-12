@@ -1,5 +1,4 @@
 #include "Task3.h"
-#include <chrono>
 
 const int GRACEFUL_SECONDS = 10;
 bool GRACEFUL_EXIT = false;
@@ -35,10 +34,14 @@ int main(int argc, char * argv[]) {
     std::string output_file= argv[2];
 
     for(int i = 3;i < 16; i++){
+        std::string file = "Task3Files/Fifo/FIFO" + std::to_string(i);
+        char file_name[file.length() + 1]; 
+        strcpy(file_name,file.c_str());
+    
         // Creates Fifo file
-        if(mkfifo(("Task3Files/Fifo/FIFO" + std::to_string(i)).c_str(), 0777) == -1){
+        if(mkfifo(file_name, 0777) == -1){
             if(errno != EEXIST){
-                output_handler.print_error("Could Not Create Fifo File\n");
+                perror("Could Not Create Fifo File\n");
             }
         }
     }
@@ -107,7 +110,7 @@ void *map3(void *args)
 
     // Addsall indexes to the corresponding vectors
     output_handler.print_log("Created all index arrays");
-    for (int i = 0; i < Global.size();i++){
+    for (int i = 0; i < (int)Global.size();i++){
         // Gets size of word
         int length = Global[i].length();
         // Subtracts the offset of the array to get the 

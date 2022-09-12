@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <fstream>
+#include <cstring>
 #include "Task1Filter.h"
 #include "Structures.h"
 #include "Utils.h"
