@@ -7,5 +7,6 @@ int main(int argc, char *argv[]){
     for(int i = 0; i < size;i++){
         std::cout << s->get() << std::endl;
     }
+    delete s;
 }
 
