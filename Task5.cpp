@@ -46,7 +46,9 @@ int main(int argc, char *argv[]){
                 }
             }
             if(valid){
-                write(fd,line.c_str(),line.length() + 1);
+                if(write(fd,line.c_str(),line.length() + 1)<0){
+                    output_handler.print_error("Error Writting to File!");
+                };
             }
         }
     }
