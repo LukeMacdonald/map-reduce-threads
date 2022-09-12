@@ -13,7 +13,7 @@ clean:
 Task5Server: Stream.o Task5Server.o
 	g++ -Wall -Werror -std=c++14 -g -O -o $@ $^
 
-Task1: Task1.o
+Task1: Task1.o OutputHandler.o
 	g++ -Wall -Werror -std=c++14 -g -O -o $@ $^
 
 Task2: Task1Filter.o Task2.o Utils.o OutputHandler.o
