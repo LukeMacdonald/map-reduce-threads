@@ -1,26 +1,29 @@
 #include "Task5.h"
 
 #define BUFFER 250
-#define THREAD_NUM 13
+OutputHandler output_handler;
 
 int main(int argc, char *argv[]){
+    clock_t start,end;
+    start = clock();
+    output_handler.open_files("Task5Files/");
 
     std::string output_file= argv[1];
     
-    if(mkfifo("Map5", 0777) == -1){
+    if(mkfifo("Task5Files/Fifo/Map5", 0777) == -1){
             if(errno != EEXIST){
-                perror("Could Not Create Fifo File\n");
+                output_handler.print_error("Could Not Create Fifo File\n");
             }
     }
     for(int i = 3;i < 16; i++){
-        std::string file = "Fifo" + std::to_string(i);
+        std::string file = "Task5Files/Fifo/Fifo" + std::to_string(i);
         char file_name[file.length() + 1]; 
         strcpy(file_name,file.c_str());
     
         // Creates Fifo file
         if(mkfifo(file_name, 0777) == -1){
             if(errno != EEXIST){
-                perror("Could Not Create Fifo File\n");
+                output_handler.print_error("Could Not Create Fifo File\n");
             }
         }
     }
@@ -30,7 +33,8 @@ int main(int argc, char *argv[]){
     bool valid;
     pthread_create(&reduce,nullptr,&reduce5,&output_file);
     pthread_create(&map,nullptr,&map5,nullptr);
-    int fd = open("Map5",O_WRONLY);
+    int fd = open("Task5Files/Fifo/Map5",O_WRONLY);
+    output_handler.print_log("Reading Words in Vectors From Server Stream!");
     while (std::getline(std::cin, line))
     {
         int size = line.length();
@@ -49,29 +53,31 @@ int main(int argc, char *argv[]){
     close(fd);
     pthread_join(map,nullptr);
     pthread_join(reduce,nullptr);
-    // Deletes the Fifo Files
-    for(int i = 3;i < 16;i++){
-        std::string file = "Fifo" + std::to_string(i);
-        remove(file.c_str());
-    }
-    remove("Map5");
+    end = clock();
+    std::cout << "Task 5 Finish Completed!\nOutput File is located in in 'Task5Files/output' directory as '" 
+    << output_file <<  "'\n";
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+    output_handler.print_exec_time("Total",time_taken);
+    output_handler.close_files();
     return EXIT_SUCCESS;
 }
 void* map5(void* args){
     int cd[THREAD_NUM];
     for (int i = 0; i < THREAD_NUM; i++) {
-        std::string file = "Fifo" + std::to_string(i + 3);
+        std::string file = "Task5Files/Fifo/Fifo" + std::to_string(i + 3);
         char file_name[file.length() + 1]; 
         strcpy(file_name,file.c_str());
         cd[i] = open(file_name,O_WRONLY);
     }
     char line[BUFFER];
     std::string c;
-    int fd = open("Map5",O_RDONLY);
+    int fd = open("Task5Files/Fifo/Map5",O_RDONLY);
     while(read(fd,&line,BUFFER)>0){
         c = line;
         int index = c.length() - 3;
-        if(write(cd[index],c.c_str(),c.length() + 1)>0){};
+        if(write(cd[index],c.c_str(),c.length() + 1)>0){
+
+        };
     }
     close(fd);
     for (int i = 0; i < THREAD_NUM; i++) {
@@ -88,7 +94,7 @@ void* reduce5(void* args){
     for (int i = 0; i < THREAD_NUM; i++) {
         v[i].push_back(std::to_string(i + 3));
         if (pthread_create(&th[i], nullptr, &pthread_function, &v[i]) != 0) {
-            perror("Failed to create thread\n");
+            output_handler.print_error("Failed to create thread\n");
         }
     }
     // JOINS THREADS
@@ -102,7 +108,7 @@ void* reduce5(void* args){
     }
 
     // Opens file to write out merge and sorted list
-    std::string file_name = *(std::string*)args;
+    std::string file_name = "Task5Files/output/" + *(std::string*)args;
     std::ofstream output(file_name);
     // Performs sorting and writing on all strings from fifo files
     while (!all_words.empty()){
@@ -126,7 +132,7 @@ void* reduce5(void* args){
             v[index].erase(v[index].begin());
         }
     }
-    printf("Completed!!!\n");
+    output_handler.print_error("Task 5 Completed!!!\n");
     
     // Close the file that program writes merged list to.
     output.close();
@@ -137,7 +143,7 @@ void *pthread_function(void *a){
     
     std::vector<std::string>&v = *(std::vector<std::string>*)a;
     
-    std::string file = "Fifo" + v[0];
+    std::string file = "Task5Files/Fifo/Fifo" + v[0];
     
     int fd = open(file.c_str(),O_RDONLY);
     

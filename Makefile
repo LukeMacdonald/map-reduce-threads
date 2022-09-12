@@ -25,7 +25,7 @@ Task3: Task1Filter.o Task3.o Utils.o OutputHandler.o
 Task4: Task1Filter.o Task4.o Utils.o OutputHandler.o
 	g++ -Wall -Werror -std=c++14 -g -O -pthread -o $@ $^
 
-Task5: Task5.o Utils.o
+Task5: Task5.o Utils.o OutputHandler.o
 	g++ -Wall -Werror -std=c++14 -g -O -pthread -o $@ $^
 
 %.o: %.cpp

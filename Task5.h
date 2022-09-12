@@ -15,6 +15,7 @@
 #include <string.h>
 #include "Utils.h"
 #include "Structures.h"
+#include "OutputHandler.h"
 
 void* map5(void* args);
 void* reduce5(void* args);
