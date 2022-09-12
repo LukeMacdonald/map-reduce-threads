@@ -10,7 +10,7 @@ int main(int argc, char *argv[]){
     // Second command line argument is the name of the clean file
     std::string output_file= argv[2];
     // Function to filter to dirty file into the clean file.
-    std::string filter = "Task2Files/filter/filter.txt";
+    std::string filter = "Task2Files/filtered/filter.txt";
     task1Filter(input_file,filter);
     map2(output_file);
     std::cout << "Task 2 Finish Completed!\nOutput File is located in in 'Task2Files/output' directory as '" 
@@ -26,7 +26,7 @@ void map2(std::string filename){
     start = clock();
     
     // Declares and opens file to map
-    std::ifstream input_file("Task2Files/filter/filter.txt");
+    std::ifstream input_file("Task2Files/filtered/filter.txt");
     // Declares an array of vectors. One vector for 
     // each length of word from 3 to 15
     std::vector<std::string> index[PROCESS_NUM];
@@ -62,16 +62,14 @@ void map2(std::string filename){
             child_function(index_size,index[i]);
             output_handler.print_log("Map2 child process: For Length Vector " + std::to_string(index_size) + " Has Completed!");
             // Call to exit the child process
-             end_process = clock();
-             double time_taken_process = double(end_process - start_process) / double(CLOCKS_PER_SEC);
-             output_handler.print_exec_time("Map2 Process"+ std::to_string(index_size),time_taken_process);
+            end_process = clock();
+            double time_taken_process = double(end_process - start_process) / double(CLOCKS_PER_SEC);
+            output_handler.print_exec_time("Map2 Process"+ std::to_string(index_size),time_taken_process);
             exit(EXIT_SUCCESS);
         }
     }
     // For loop to calls to wait until all child processes have completed
-    for (int i = 0; i <= PROCESS_NUM; i++) {
-        wait(nullptr);
-    }
+    wait(nullptr);
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
     output_handler.print_exec_time("Map2",time_taken);
@@ -89,6 +87,7 @@ void reduce2(std::string filename){
     std::string length_file;
     std::string smallest;
     std::vector<std::string> all_words;
+    int file_sizes[PROCESS_NUM] = {0};
 
     // Loop for opening and getting first line of each files
     for (int i = 0; i < PROCESS_NUM; i++){
@@ -97,6 +96,7 @@ void reduce2(std::string filename){
         output_handler.print_log("Opening: " + length_file);
         if (std::getline(files[i], smallest)){
             all_words.push_back(smallest);
+            file_sizes[i]++;
         }
     }
     
@@ -117,6 +117,7 @@ void reduce2(std::string filename){
         // into the vector only if there is one there.
         if(getline(files[index],smallest)){
             all_words.push_back(smallest);
+            file_sizes[index]++;
         }
     }
     // Closes file that reduce is writing to.
@@ -125,6 +126,7 @@ void reduce2(std::string filename){
     // Closes all the different word length files
     for (int i = 0; i < 13; i++){
         output_handler.print_log("Closing Task2Files/MapFolder/File" + std::to_string(i + 3) + ".txt");
+        std::cout << file_sizes[i] << std::endl;
         files[i].close();
     }
     output_handler.print_log("Reduce2 has completed!");
