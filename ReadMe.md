@@ -58,6 +58,7 @@
 
 The C++ MapReduce Implementation project aims to explore various parallel processing techniques for executing MapReduce tasks under different circumstances. The project will sequentially implement MapReduce using processes, threads, threads with synchronization, and reading input from a stream. By comparing the performance and efficiency of each approach, the project seeks to provide insights into the strengths and limitations of different parallel processing paradigms
 
+- MapReduce is a programming model and associated implementation for processing and generating large datasets in a distributed computing environment.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
@@ -106,8 +107,8 @@ To get a local copy up and running follow these simple example steps.
 ## Roadmap
 
 - [x] Task 1: Clean up wordlists
-      [x] Remove duplicates
-      [x] Remove words with non-alphabetic characters
+  - [x] Remove duplicates
+  - [x] Remove words with non-alphabetic characters
 - [x] Task 2: Perform MapReduce with Processes
 - [x] Task 3: Perform MapReduce with Threads
 - [x] Task 4: Perform MapReduce with Synchronized Threads
